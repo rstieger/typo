@@ -21,6 +21,11 @@ module NavigationHelpers
       '/admin'
     when /^the new categories page$/
       '/admin/categories/new'
+    when /^the edit page for article/
+      begin
+        id = /article ([0-9]*)$/.match(page_name)[1]
+        "/admin/content/edit/#{id}"
+      end
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

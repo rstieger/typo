@@ -37,6 +37,23 @@ class Admin::ContentController < Admin::BaseController
     new_or_edit
   end
 
+  def merge
+    redirect_to :action => 'index'
+    id = params[:id]
+    with = params[:merge][:with]
+
+    if id == with
+      flash[:error] = _("Error, unable to merge with same article")
+      return
+    end
+    orig = Article.find_by_id(id)
+
+    if orig.merge_with(with).nil?
+      flash[:error] = _("Error, unable to merge, article #{with} does not exist")
+      return
+    end
+  end
+
   def destroy
     @record = Article.find(params[:id])
 
@@ -240,4 +257,5 @@ class Admin::ContentController < Admin::BaseController
   def setup_resources
     @resources = Resource.by_created_at
   end
+
 end

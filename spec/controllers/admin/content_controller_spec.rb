@@ -546,6 +546,41 @@ describe Admin::ContentController do
       end
     end
 
+    describe 'merge action' do
+      before :each do
+        @orig = Factory(:article)
+        @merge_with = Factory(:article)
+        Article.stub(:find_by_id).and_return(@orig)
+      end
+      it 'should redirect to admin content page' do
+        post :merge, :id => @orig.id, :merge => {:with => @merge_with.id}
+        response.should redirect_to(:action => 'index')
+      end
+      it 'should call the model method to merge' do
+        @orig.should_receive(:merge_with).with(@merge_with.id).and_return @orig
+        post :merge, :id => @orig.id, :merge => {:with => @merge_with.id}
+      end
+      context 'on same article' do
+        it 'should not call the merge model method' do
+          @orig.should_not_receive(:merge_with)
+          post :merge, :id => @orig.id, :merge => {:with => @orig.id}
+        end
+        it 'should display an error message' do
+          post :merge, :id => @orig.id, :merge => {:with => @orig.id}
+          flash[:error].should include("unable to merge with same article")
+        end
+      end
+      context 'on non-existent article' do
+        before :each do
+          @orig.should_receive(:merge_with).with(@merge_with.id).and_return(nil)
+        end
+        it 'should display an error message' do
+          post :merge, :id => @orig.id, :merge => {:with => @merge_with.id}
+          flash[:error].should include("#{@merge_with.id} does not exist")
+        end
+      end
+    end
+
     describe 'resource_add action' do
 
       it 'should add resource' do

@@ -1,0 +1,10 @@
+<div class ='merge'>
+<%= form_tag({:action => 'merge', :id =>  @article.id}) do %>
+  <h4><%= _("Merge Articles") %></h4>
+  Article ID
+  <%= text_field 'merge', 'with', :value => '' %>
+  <p>
+  <input id='merge' type="submit" value="<%= _('Merge') %>" %>
+<% end %>
+</div>
+

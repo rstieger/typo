@@ -630,5 +630,44 @@ describe Article do
     end
 
   end
+
+  describe "#merge" do
+    before :each do
+      @alice = Factory(:user, {:name => 'Alice'})
+      @bob = Factory(:user, {:name => 'Bob'})
+      @orig = Factory(:article,{:title => 'First', :user => @alice, :body => 'The quick brown fox'})
+      @tomerge = Factory(:article, {:title => 'Second', :user => @bob, :body => 'jumps over the lazy dog'})
+      @comment1 = Factory(:comment, {:article => @orig})
+      @comment2 = Factory(:comment, {:article => @tomerge})
+    end
+    context "with valid article" do
+      before :each do
+        @merged = @orig.merge_with(@tomerge.id)
+      end
+      it "should return Article" do
+        @merged.should be_an(Article)
+      end
+      it "should merge body" do
+        @merged.body.should include('The quick brown fox')
+        @merged.body.should include('jumps over the lazy dog')
+      end
+      it "should select an author" do
+        @merged.user.should be == @alice
+      end
+      it "should merge comments" do
+        @merged.comments.should include(@comment1, @comment2)
+      end
+      it "should delete merged article" do
+        Article.find_by_id(@tomerge.id).should be_nil
+      end
+      it "should update database" do
+        Article.find_by_id(@orig.id).should be == @merged
+      end
+    end
+    it "with invalid article should return nil" do
+      @tomerge.destroy
+      @orig.merge_with(@tomerge.id).should be_nil
+    end
+  end
 end
 
