@@ -13,6 +13,8 @@ Feature: Merge Articles
     And I am on the admin content page
     Then I should see "First"
     And I should see "Second"
+    When I am on the home page
+    Then I should see "1 comment"
 
   Scenario: Successfully merge articles
     Given I am editing "First"
@@ -26,6 +28,8 @@ Feature: Merge Articles
     When I follow "First"
     Then I should see "A quick brown fox"
     And I should see "jumps over the lazy dog"
+    When I am on the home page
+    Then I should see "2 comment"
 #And I should see "Great article"
 #And I should see "First post"
 

@@ -420,7 +420,11 @@ class Article < Content
     tomerge = Article.find_by_id(id)
     return nil if tomerge.nil?
     self.body += tomerge.body
-    self.comments += tomerge.comments
+    tomerge.comments.each do |comment|
+      self.comments << Comment.create(:article => self,
+                                      :body => comment.body,
+                                      :author => comment.author)
+    end
     self.save
     tomerge.destroy
     return self
