@@ -1,7 +1,7 @@
 Given /the following articles exist/ do |articles_table|
   articles_table.hashes.each do |article|
     a = Article.create({ :title => article[:title],
-#:user => User.create!({:name => article[:author]}),
+        :user => User.find_by_name(article[:author]),
         :body => article[:body],
         :published_at => DateTime.now})
     Comment.create({:article => a, :author => article[:author], :body => article[:comment]})

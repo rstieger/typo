@@ -8,8 +8,8 @@ Feature: Merge Articles
     And I am logged into the admin panel
     And the following articles exist:
     | title   | author  | body                      | comment       |
-    | First   | Alice   | A quick brown fox         | Great article |
-    | Second  | Bob     | jumps over the lazy dog   | First Post!   |
+    | First   | admin   | A quick brown fox         | Great article |
+    | Second  | joe     | jumps over the lazy dog   | First Post!   |
     And I am on the admin content page
     Then I should see "First"
     And I should see "Second"
@@ -30,8 +30,6 @@ Feature: Merge Articles
     And I should see "jumps over the lazy dog"
     When I am on the home page
     Then I should see "2 comment"
-#And I should see "Great article"
-#And I should see "First post"
 
   Scenario: Try to merge with article that doesn't exist
     Given I am editing "First"
@@ -47,3 +45,8 @@ Feature: Merge Articles
     Then I should be on the admin content page
     And I should see "Error, unable to merge with same article"
 
+  Scenario: Logged in as non-admin
+    Given I am logged in as non-admin
+    And I am editing "Second"
+    Then I should see "jumps over the lazy dog"
+    And I should not see "Merge"
