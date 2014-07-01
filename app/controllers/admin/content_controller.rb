@@ -40,7 +40,7 @@ class Admin::ContentController < Admin::BaseController
   def merge
     redirect_to :action => 'index'
     id = params[:id]
-    with = params[:merge][:with]
+    with = params[:merge_with]
 
     if id == with
       flash[:error] = _("Error, unable to merge with same article")
